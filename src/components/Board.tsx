@@ -108,8 +108,13 @@ export default function Board() {
   };
 
   const checkCorrectWord = (triedWord: string) => {
-    if (triedWord.length != 5) toast.error(MESSAGES.length);
-    else if (wordList.length < 6) {
+    if (triedWord.length != 5) {
+      toast.error(MESSAGES.length);
+    } else if (
+      wordList.length < 6 &&
+      (AVAILABLE_WORDS.includes(triedWord) || WORD_LIST.includes(triedWord)) &&
+      !wordList.includes(triedWord)
+    ) {
       let newColors = getHints(triedWord, correctWord);
 
       // If finished, terminate
@@ -125,6 +130,13 @@ export default function Board() {
       setCurrentWord("");
       setWordList(newWordList);
       generateBoard(newWordList, newColorsList);
+    } else if (
+      wordList.length < 6 &&
+      !(AVAILABLE_WORDS.includes(triedWord) || WORD_LIST.includes(triedWord))
+    ) {
+      toast.error(MESSAGES.notInList);
+    } else if (wordList.length < 6 && wordList.includes(triedWord)) {
+      toast.error(MESSAGES.alreadyUsed);
     }
   };
 
@@ -139,16 +151,17 @@ export default function Board() {
   return (
     <div id="board">
       <Banner state={gameState} colors={colorList} triedWords={wordList} />
+      {window.innerWidth > 640 && (
+        <input
+          type="text"
+          onKeyDown={_checkKeyDown}
+          autoFocus
+          style={{ width: 0, height: 0, opacity: 0 }}
+          onBlur={handleKeepFocused}
+        />
+      )}
       <div className="wrapper">
-        {window.innerWidth > 640 && (
-          <input
-            type="text"
-            onKeyDown={_checkKeyDown}
-            autoFocus
-            style={{ width: 0, height: 0, opacity: 0 }}
-            onBlur={handleKeepFocused}
-          />
-        )}
+        <div></div>
         <div className="words">{words}</div>
         <Keyboard
           checkKeyDown={_checkKeyDown}
@@ -156,7 +169,7 @@ export default function Board() {
           triedWords={wordList}
         />
       </div>
-      <ToastContainer theme="dark" />
+      <ToastContainer theme="dark" autoClose={1000} />
     </div>
   );
 }

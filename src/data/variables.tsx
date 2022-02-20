@@ -9,8 +9,8 @@ export const STATES: { [key: string]: STATE_TYPE } = {
 };
 
 export const MESSAGES: { [key: string]: string } = {
-  lost: "Sorry, you lost! Come back tomorrow for a different word",
-  won: "You already won! Come back tomorrow for more",
+  notInList: "That word is not in our list of available words!",
+  alreadyUsed: "You already used that word!",
   length: "The word needs to be 5 letters long!",
 };
 

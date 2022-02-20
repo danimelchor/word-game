@@ -3,6 +3,7 @@ import { ICONS, STATES, STATE_TYPE } from "../data/variables";
 import Countdown from "./Countdown";
 
 import { IoMdClose } from "react-icons/io";
+import { toast } from "react-toastify";
 
 interface PropTypes {
   state: STATE_TYPE;
@@ -19,7 +20,7 @@ export default function Banner({ state, triedWords, colors }: PropTypes) {
   let color = state === STATES.lost ? "#8e4242" : "#6aaa64";
 
   const handleShare = () => {
-    let result = `Dani's wordle - ${
+    let result = `Wordel* - ${
       state === STATES.won ? triedWords.length : "X"
     }/6\n\n`;
 
@@ -30,8 +31,11 @@ export default function Banner({ state, triedWords, colors }: PropTypes) {
       result += "\n";
     }
 
-    if (navigator.share) navigator.share({ text: "result" });
-    else navigator.clipboard.writeText(result);
+    if (navigator.share) navigator.share({ text: result });
+    else {
+      toast.success("Copied to clipboard!");
+      navigator.clipboard.writeText(result);
+    }
   };
 
   return (
